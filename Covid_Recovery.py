@@ -14,6 +14,9 @@ latest_date = data['Date'].max()
 # Filter data for the latest date
 latest_data = data[data['Date'] == latest_date]
 
+# Calculate recovery rate as a percentage and add it to the latest_data DataFrame
+latest_data['Recovery Rate'] = (latest_data['Recovered'] / latest_data['Confirmed']) * 100
+
 # Streamlit app title
 st.title('COVID-19 Recovery Statistics')
 
@@ -23,11 +26,8 @@ selected_state = st.selectbox('Select a state:', latest_data['US_States'])
 # Filter data for selected state
 selected_state_data = latest_data[latest_data['US_States'] == selected_state]
 
-# Calculate recovery rate as a percentage
-recovery_rate = (selected_state_data['Recovered'] / selected_state_data['Confirmed']) * 100
-
 # Display recovery rate and total recovered cases for selected state
-st.write(f"Recovery Rate in {selected_state} as of {latest_date}: {recovery_rate.values[0]:.2f}%")
+st.write(f"Recovery Rate in {selected_state} as of {latest_date}: {selected_state_data['Recovery Rate'].values[0]:.2f}%")
 st.write(f"Total Recovered Cases in {selected_state} as of {latest_date}: {selected_state_data['Recovered'].values[0]}")
 
 # Create bar chart for total recovered cases by state
