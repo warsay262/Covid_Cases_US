@@ -26,13 +26,13 @@ daily_cases = filtered_data.groupby('Date')['Confirmed'].sum()
 
 # Create a line chart using Matplotlib and display it using Streamlit
 st.write("### Confirmed COVID-19 Cases Over Time")
-plt.figure(figsize=(10, 6))
-plt.plot(daily_cases.index, daily_cases.values, marker='o')
-plt.xlabel('Date')
-plt.ylabel('Confirmed Cases')
-plt.title('Confirmed COVID-19 Cases Over Time')
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(daily_cases.index, daily_cases.values, marker='o')
+ax.set_xlabel('Date')
+ax.set_ylabel('Confirmed Cases')
+ax.set_title('Confirmed COVID-19 Cases Over Time')
 plt.xticks(rotation=45)
-st.pyplot()
+st.pyplot(fig)
 
 # Add a disclaimer
 st.write("Note: This dashboard is for demonstration purposes only and the data used may not be up-to-date.")
