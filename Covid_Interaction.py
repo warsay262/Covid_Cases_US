@@ -25,7 +25,8 @@ st.write(filtered_data[['Date', 'Confirmed']].set_index('Date'))
 # Group data by date and calculate total confirmed cases
 daily_cases = filtered_data.groupby('Date')['Confirmed'].sum()
 
-# Create a line chart
+# Create a line chart using Matplotlib and display it using Streamlit
+st.write('### Confirmed COVID-19 Cases Over Time')
 plt.figure(figsize=(10, 6))
 sns.lineplot(x=daily_cases.index, y=daily_cases.values)
 plt.xlabel('Date')
