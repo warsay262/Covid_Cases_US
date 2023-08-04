@@ -31,6 +31,11 @@ ax.plot(daily_cases.index, daily_cases.values, marker='o')
 ax.set_xlabel('Date')
 ax.set_ylabel('Confirmed Cases')
 ax.set_title('Confirmed COVID-19 Cases Over Time')
+
+# Annotate the chart with selected state and date range
+annotation_text = f'Selected State: {selected_state}\nYear Range: {selected_year_range[0]} - {selected_year_range[1]}'
+ax.annotate(annotation_text, xy=(0.5, 0.05), xycoords='axes fraction', fontsize=10, ha='center', color='gray')
+
 plt.xticks(rotation=45)
 st.pyplot(fig)
 
