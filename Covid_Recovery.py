@@ -34,17 +34,9 @@ st.write(f"Total Recoveries: {selected_state_data['Recovered'].values[0]}")
 # Create bar chart for latest recovery rates by states
 recovery_rates = latest_data['Recovered'] / latest_data['Confirmed'] * 100
 recovery_rates_df = pd.DataFrame({'State': latest_data['US_States'], 'Recovery Rate': recovery_rates})
-st.write("### Latest Recovery Rates by States")
-fig_rates, ax_rates = plt.subplots(figsize=(10, 6))
-ax_rates.bar(recovery_rates_df['State'], recovery_rates_df['Recovery Rate'])
-ax_rates.set_xlabel('States')
-ax_rates.set_ylabel('Recovery Rate (%)')
-ax_rates.set_title('Latest Recovery Rates by States')
-plt.xticks(rotation=45)
-st.pyplot(fig_rates)
 
 # Create bar chart for total recoveries by state
-total_recoveries_df = latest_data[['US_States', 'Recovered']]
+total_recoveries_df = latest_data.groupby('US_States')['Recovered'].sum().reset_index()
 st.write("### Total Recoveries by State")
 fig_recoveries, ax_recoveries = plt.subplots(figsize=(10, 6))
 ax_recoveries.bar(total_recoveries_df['US_States'], total_recoveries_df['Recovered'])
