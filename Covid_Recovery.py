@@ -22,10 +22,10 @@ selected_state = st.sidebar.selectbox('Select a State', data['US_States'].unique
 filtered_data = data[(data['US_States'] == selected_state) & (data['Date'] == latest_date)]
 
 # Display total recovery for the selected state and latest date
-st.write(f"Total Recovery in {selected_state} as of {latest_date}: {int(filtered_data['Recovered'])}")
+st.write(f"Total Recovery in {selected_state} as of {latest_date}: {int(filtered_data['Recovered'].iloc[0])}")
 
 # Calculate recovery rate and display it
-recovery_rate = (filtered_data['Recovered'] / filtered_data['Confirmed']) * 100
+recovery_rate = (filtered_data['Recovered'].iloc[0] / filtered_data['Confirmed'].iloc[0]) * 100
 st.write(f"Recovery Rate in {selected_state} as of {latest_date}: {recovery_rate:.2f}%")
 
 # Create bar chart for latest recovery rate by states
