@@ -31,24 +31,24 @@ st.write(f"Recovery Rate in {selected_state} as of {latest_date}: {recovery_rate
 # Create bar chart for latest recovery rate by states
 st.write("### Latest Recovery Rate by States")
 latest_recovery_rates = data[data['Date'] == latest_date]
-plt.figure(figsize=(12, 8))
-plt.bar(latest_recovery_rates['US_States'], (latest_recovery_rates['Recovered'] / latest_recovery_rates['Confirmed']) * 100)
-plt.xticks(rotation=90)
-plt.xlabel('States')
-plt.ylabel('Recovery Rate (%)')
-plt.title('Latest Recovery Rate by States')
-st.pyplot()
+fig, ax = plt.subplots(figsize=(12, 8))
+ax.bar(latest_recovery_rates['US_States'], (latest_recovery_rates['Recovered'] / latest_recovery_rates['Confirmed']) * 100)
+ax.set_xticklabels(latest_recovery_rates['US_States'], rotation=90)
+ax.set_xlabel('States')
+ax.set_ylabel('Recovery Rate (%)')
+ax.set_title('Latest Recovery Rate by States')
+st.pyplot(fig)
 
 # Create bar chart for latest recovery date by states
 st.write("### Latest Recovery Date by States")
 latest_recovery_dates = data.groupby('US_States')['Date'].max().reset_index()
-plt.figure(figsize=(12, 8))
-plt.bar(latest_recovery_dates['US_States'], latest_recovery_dates['Date'])
-plt.xticks(rotation=90)
-plt.xlabel('States')
-plt.ylabel('Latest Recovery Date')
-plt.title('Latest Recovery Date by States')
-st.pyplot()
+fig, ax = plt.subplots(figsize=(12, 8))
+ax.bar(latest_recovery_dates['US_States'], latest_recovery_dates['Date'])
+ax.set_xticklabels(latest_recovery_dates['US_States'], rotation=90)
+ax.set_xlabel('States')
+ax.set_ylabel('Latest Recovery Date')
+ax.set_title('Latest Recovery Date by States')
+st.pyplot(fig)
 
 # Add a disclaimer
 st.write("Note: This dashboard is for demonstration purposes only and the data used may not be up-to-date.")
