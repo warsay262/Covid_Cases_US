@@ -15,7 +15,26 @@ latest_date = data['Date'].max()
 latest_data = data[data['Date'] == latest_date]
 
 # Streamlit app title
-st.title('COVID-19 Recovery Statistics')
+st.title('COVID-19 Recovery Data')
+
+# Dropdown to select state for recovery rate
+selected_state_rate = st.selectbox('Select a state for Recovery Rate:', latest_data['US_States'])
+
+# Filter data for selected state
+selected_state_data = latest_data[latest_data['US_States'] == selected_state_rate]
+
+# Display recovery rate for selected state
+recovery_rate = (selected_state_data['Recovered'] / selected_state_data['Confirmed']) * 100
+st.write(f"Recovery Rate in {selected_state_rate} as of {latest_date}: {recovery_rate.values[0]:.2f}%")
+
+# Dropdown to select state for total recovered cases
+selected_state_recovered = st.selectbox('Select a state for Total Recovered Cases:', latest_data['US_States'])
+
+# Filter data for selected state
+selected_state_data_recovered = latest_data[latest_data['US_States'] == selected_state_recovered]
+
+# Display total recovered cases for selected state
+st.write(f"Total Recovered Cases in {selected_state_recovered} as of {latest_date}: {selected_state_data_recovered['Recovered'].values[0]}")
 
 # Create bar chart for total recovered cases by states
 st.write('### Total Recoveries by State (Latest Date)')
