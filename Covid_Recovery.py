@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 data = pd.read_csv('Covid_Cases_Recovered.csv')
 data['Date'] = pd.to_datetime(data['Date'])
 
+# Remove rows with missing data
+data.dropna(subset=['Confirmed', 'Deaths', 'Recovered'], inplace=True)
+
 # Streamlit app
 st.title('COVID-19 Recovery Data')
 
