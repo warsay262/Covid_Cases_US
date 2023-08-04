@@ -2,46 +2,53 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Load the data
+# Load the new dataset
 data = pd.read_csv('Covid_Cases_Recovered.csv')
 data['Date'] = pd.to_datetime(data['Date'])
 
 # Remove rows with missing data
-data.dropna(subset=['Confirmed', 'Deaths', 'Recovered'], inplace=True)
+data.dropna(subset=['Recovered'], inplace=True)
 
-# Streamlit app
-st.title('COVID-19 Recovery Data')
-
-# Get the latest date in the data
+# Get the latest date
 latest_date = data['Date'].max()
 
-# Filter data for the latest date
-latest_data = data[data['Date'] == latest_date]
+# Streamlit app
+st.title('COVID-19 Recovery Statistics')
 
-# Create a list of states for user selection
-states = latest_data['US_States'].unique()
-selected_state = st.sidebar.selectbox('Select a State', states)
+# Sidebar - State selection
+selected_state = st.sidebar.selectbox('Select a State', data['US_States'].unique())
 
-# Filter data for the selected state
-selected_state_data = latest_data[latest_data['US_States'] == selected_state]
+# Filter data for the selected state and latest date
+filtered_data = data[(data['US_States'] == selected_state) & (data['Date'] == latest_date)]
 
-# Display recovery rate and total recoveries for the selected state
-st.write(f"Latest Date: {latest_date.strftime('%Y-%m-%d')}")
-st.write(f"Selected State: {selected_state}")
-st.write(f"Recovery Rate: {selected_state_data['Recovered'].values[0] / selected_state_data['Confirmed'].values[0] * 100:.2f}%")
-st.write(f"Total Recoveries: {selected_state_data['Recovered'].values[0]}")
+# Display total recovery for the selected state and latest date
+st.write(f"Total Recovery in {selected_state} as of {latest_date}: {int(filtered_data['Recovered'])}")
 
-# Create bar chart for latest recovery rates by states
-recovery_rates = latest_data['Recovered'] / latest_data['Confirmed'] * 100
-recovery_rates_df = pd.DataFrame({'State': latest_data['US_States'], 'Recovery Rate': recovery_rates})
+# Calculate recovery rate and display it
+recovery_rate = (filtered_data['Recovered'] / filtered_data['Confirmed']) * 100
+st.write(f"Recovery Rate in {selected_state} as of {latest_date}: {recovery_rate:.2f}%")
 
-# Create bar chart for total recoveries by state
-total_recoveries_df = latest_data.groupby('US_States')['Recovered'].sum().reset_index()
-st.write("### Total Recoveries by State")
-fig_recoveries, ax_recoveries = plt.subplots(figsize=(10, 6))
-ax_recoveries.bar(total_recoveries_df['US_States'], total_recoveries_df['Recovered'])
-ax_recoveries.set_xlabel('States')
-ax_recoveries.set_ylabel('Total Recoveries')
-ax_recoveries.set_title('Total Recoveries by State')
-plt.xticks(rotation=45)
-st.pyplot(fig_recoveries)
+# Create bar chart for latest recovery rate by states
+st.write("### Latest Recovery Rate by States")
+latest_recovery_rates = data[data['Date'] == latest_date]
+plt.figure(figsize=(12, 8))
+plt.bar(latest_recovery_rates['US_States'], (latest_recovery_rates['Recovered'] / latest_recovery_rates['Confirmed']) * 100)
+plt.xticks(rotation=90)
+plt.xlabel('States')
+plt.ylabel('Recovery Rate (%)')
+plt.title('Latest Recovery Rate by States')
+st.pyplot()
+
+# Create bar chart for latest recovery date by states
+st.write("### Latest Recovery Date by States")
+latest_recovery_dates = data.groupby('US_States')['Date'].max().reset_index()
+plt.figure(figsize=(12, 8))
+plt.bar(latest_recovery_dates['US_States'], latest_recovery_dates['Date'])
+plt.xticks(rotation=90)
+plt.xlabel('States')
+plt.ylabel('Latest Recovery Date')
+plt.title('Latest Recovery Date by States')
+st.pyplot()
+
+# Add a disclaimer
+st.write("Note: This dashboard is for demonstration purposes only and the data used may not be up-to-date.")
