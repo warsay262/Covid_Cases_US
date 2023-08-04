@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 # Load the data
 data = pd.read_csv('Covid_Cases_2020-2022.csv')
@@ -26,9 +25,9 @@ st.write(filtered_data[['Date', 'Confirmed']].set_index('Date'))
 daily_cases = filtered_data.groupby('Date')['Confirmed'].sum()
 
 # Create a line chart using Matplotlib and display it using Streamlit
-st.write('### Confirmed COVID-19 Cases Over Time')
+st.write("### Confirmed COVID-19 Cases Over Time")
 plt.figure(figsize=(10, 6))
-sns.lineplot(x=daily_cases.index, y=daily_cases.values)
+plt.plot(daily_cases.index, daily_cases.values, marker='o')
 plt.xlabel('Date')
 plt.ylabel('Confirmed Cases')
 plt.title('Confirmed COVID-19 Cases Over Time')
