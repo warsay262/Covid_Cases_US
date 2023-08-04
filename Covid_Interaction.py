@@ -20,10 +20,12 @@ total_confirmed = filtered_data['Confirmed'].sum()
 st.write(f"Total confirmed cases in {selected_state} in {selected_year}: {total_confirmed}")
 
 # Create a line chart for confirmed cases over the years
-plt.figure(figsize=(10, 6))
-plt.plot(filtered_data['Date'], filtered_data['Confirmed'], marker='o')
-plt.xticks(rotation=45)
-plt.xlabel('Date')
-plt.ylabel('Confirmed Cases')
-plt.title(f'Confirmed Cases in {selected_state} ({selected_year})')
-st.pyplot(plt)
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(filtered_data['Date'], filtered_data['Confirmed'], marker='o')
+ax.set_xticklabels(filtered_data['Date'], rotation=45)
+ax.set_xlabel('Date')
+ax.set_ylabel('Confirmed Cases')
+ax.set_title(f'Confirmed Cases in {selected_state} ({selected_year})')
+
+# Display the Matplotlib plot using Streamlit
+st.pyplot(fig)
