@@ -7,7 +7,7 @@ data = pd.read_csv('Covid_Cases_2020-2022.csv')
 data['Date'] = pd.to_datetime(data['Date'])
 
 # Streamlit app
-st.title('Interactive COVID-19 Dashboard')
+st.title('COVID-19 confirmed Data')
 
 # Sidebar - State selection
 selected_state = st.sidebar.selectbox('Select a State', data['US_States'].unique())
