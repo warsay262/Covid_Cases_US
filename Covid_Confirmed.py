@@ -3,34 +3,34 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the dataset
-df = pd.read_csv('time_series_covid19_confirmed_US.csv')
+data = pd.read_csv('time_series_covid19_confirmed_US.csv')
 
-# Group the data by 'Province_State' and sum the confirmed cases for each state
-state_data = df.groupby('Province_State').sum()
+# Group by Province_State (State) and sum the cases for each date
+state_data = data.groupby('Province_State').sum().drop(['Admin2'], axis=1)
 
-# Extract the dates columns (from 8th column onwards)
-date_columns = state_data.columns[4:]
+# Convert the date columns to a proper datetime format
+state_data.columns = pd.to_datetime(state_data.columns)
 
-# Calculate the total confirmed cases for each date and store them in a list
-total_cases = state_data[date_columns].sum()
+# Transpose the DataFrame to have dates as rows and states as columns
+state_data = state_data.transpose()
 
 # Streamlit app
-st.title('COVID-19 Confirmed Cases in the US')
+st.title('Total Confirmed COVID-19 Cases Over Time by State')
 
-# Date range selection
-start_date = st.date_input('Start Date', pd.to_datetime(total_cases.index.min()))
-end_date = st.date_input('End Date', pd.to_datetime(total_cases.index.max()))
+# Select a state using a dropdown
+selected_state = st.selectbox('Select a State:', state_data.columns)
 
-# Filter data based on selected date range
-filtered_cases = total_cases[(total_cases.index >= start_date) & (total_cases.index <= end_date)]
+# Filter data for the selected state
+state_series = state_data[selected_state]
 
-# Plot the line chart using Matplotlib
-fig, ax = plt.subplots(figsize=(12, 6))
-ax.plot(filtered_cases.index, filtered_cases, marker='o', linestyle='-', color='blue')
-ax.set_xticks(filtered_cases.index[::40])
-ax.set_xticklabels(filtered_cases.index[::40].strftime('%Y-%m-%d'), rotation=45)
+# Create a line chart using Matplotlib
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(state_series.index, state_series.values, marker='o')
+ax.set_title(f'Total Confirmed COVID-19 Cases Over Time in {selected_state}')
 ax.set_xlabel('Date')
 ax.set_ylabel('Total Confirmed Cases')
-ax.set_title('Total Confirmed Cases for All States over Time')
-ax.grid(True)
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+# Display the chart using Streamlit
 st.pyplot(fig)
