@@ -14,26 +14,23 @@ date_columns = state_data.columns[4:]
 # Calculate the total confirmed cases for each date and store them in a list
 total_cases = state_data[date_columns].sum()
 
-# Streamlit App
-st.title('COVID-19 Confirmed Cases Analysis')
-st.sidebar.header('Date Range Selector')
+# Streamlit app
+st.title('COVID-19 Confirmed Cases in the US')
 
 # Date range selection
-start_date = st.sidebar.date_input('Start Date', pd.to_datetime(date_columns.min()))
-end_date = st.sidebar.date_input('End Date', pd.to_datetime(date_columns.max()))
+start_date = st.date_input('Start Date', pd.to_datetime(total_cases.index.min()))
+end_date = st.date_input('End Date', pd.to_datetime(total_cases.index.max()))
 
 # Filter data based on selected date range
-filtered_cases = total_cases.loc[start_date:end_date]
+filtered_cases = total_cases[(total_cases.index >= start_date) & (total_cases.index <= end_date)]
 
-# Plot the data using Matplotlib
+# Plot the line chart using Matplotlib
 fig, ax = plt.subplots(figsize=(12, 6))
 ax.plot(filtered_cases.index, filtered_cases, marker='o', linestyle='-', color='blue')
-ax.set_xticks(filtered_cases.index)
-ax.set_xticklabels(filtered_cases.index.strftime('%Y-%m-%d'), rotation=45)
+ax.set_xticks(filtered_cases.index[::40])
+ax.set_xticklabels(filtered_cases.index[::40].strftime('%Y-%m-%d'), rotation=45)
 ax.set_xlabel('Date')
 ax.set_ylabel('Total Confirmed Cases')
 ax.set_title('Total Confirmed Cases for All States over Time')
 ax.grid(True)
-
-# Display the plot using Streamlit
 st.pyplot(fig)
